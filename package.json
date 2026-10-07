@@ -1,6 +1,6 @@
 {
   "name": "@bfocus/monitor-node",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Monitoramento de erros do bFocus para Node.js — erros não tratados viram demanda, agrupados por causa e ligados ao cliente afetado.",
   "license": "MIT",
   "author": "Berni Software",
