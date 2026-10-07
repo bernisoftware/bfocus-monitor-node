@@ -1,0 +1,70 @@
+# Publica @bfocus/monitor-node no npm ao receber uma tag vX.Y.Z no espelho público
+# bernisoftware/bfocus-monitor-node (conteúdo e tag empurrados pelo scripts/release-monitor.sh
+# do monorepo, a partir de monitor/node).
+#
+# Só publica com a suíte verde no Node mínimo (18) e máximo (22) — rodando contra o artefato
+# construído: o `npm test` builda e os testes importam "@bfocus/monitor-node" pelo "exports", ou seja,
+# dist/ (ESM e CJS) — e com a tag igual à versão do package.json E à VERSION de src/version.ts
+# (vai em sdk.version de todo evento).
+# Os testes que comparam com o monorepo (monitor/release.json e
+# monitor/conformance/cases.json) pulam sozinhos aqui: o espelho não tem esses arquivos.
+# Requer o secret NPM_TOKEN (automation token da org @bfocus no npmjs).
+name: publish
+
+on:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (Node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        node: ['18', '22']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run typecheck
+      # build (dist/) + testes compilados (dist-test/) + node --test contra o artefato.
+      - run: npm test
+
+  publish:
+    needs: test # sem suíte verde no piso e no teto não sobe nada
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write # provenance
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          registry-url: 'https://registry.npmjs.org'
+          cache: npm
+      # A tag é a versão publicada. O bump e a tag são passos separados no release-monitor.sh: se
+      # divergirem, o npm receberia um número e os eventos diriam outro.
+      - name: tag == package.json == VERSION
+        run: |
+          TAG="${GITHUB_REF_NAME#v}"
+          PKG="$(node -p "require('./package.json').version")"
+          CODE="$(sed -nE "s/^export const VERSION = '([^']+)'.*/\1/p" src/version.ts)"
+          echo "tag=$TAG package.json=$PKG VERSION=$CODE"
+          if [ "$TAG" != "$PKG" ] || [ "$TAG" != "$CODE" ]; then
+            echo "::error::tag v$TAG não bate com package.json ($PKG) / src/version.ts VERSION ($CODE)"
+            exit 1
+          fi
+      - run: npm ci
+      - run: npm test
+      - run: npm pack --dry-run
+      - run: npm publish --access public --provenance
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

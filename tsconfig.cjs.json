@@ -1,0 +1,10 @@
+{
+  // Build CommonJS (dist/cjs). scripts/cjs-package.mjs grava dist/cjs/package.json
+  // com {"type":"commonjs"} — sem ele o Node leria estes .js como ESM (a raiz é "type": "module").
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "module": "CommonJS",
+    "moduleResolution": "Node10",
+    "outDir": "./dist/cjs"
+  }
+}

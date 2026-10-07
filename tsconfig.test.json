@@ -1,0 +1,13 @@
+{
+  // Testes em TS compilados para dist-test/ e rodados com `node --test`.
+  // Eles importam "@bfocus/monitor-node" (auto-referência pelo "exports"), ou seja, rodam contra
+  // o artefato CONSTRUÍDO em dist/ — o `npm test` constrói antes.
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "rootDir": "./test",
+    "outDir": "./dist-test",
+    "declaration": false,
+    "noUncheckedIndexedAccess": false
+  },
+  "include": ["test/**/*.ts"]
+}
