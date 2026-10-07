@@ -78,7 +78,7 @@ console.log(typeof mw, mw.length, atImport, calls.join(' ')); monitor.close(10);
   it("manifesto: exports, files, engines, MIT e zero dependências de runtime", () => {
     assert.equal(PKG.name, "@bfocus/monitor-node");
     assert.equal(PKG.license, "MIT");
-    assert.equal(PKG.engines.node, ">=18");
+    assert.equal(PKG.engines.node, ">=20");
     assert.deepEqual(PKG.files, ["dist", "README.md", "LICENSE"]);
     assert.deepEqual(PKG.exports["."], {
       import: { types: "./dist/esm/index.d.ts", default: "./dist/esm/index.js" },

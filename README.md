@@ -1,6 +1,6 @@
 # @bfocus/monitor-node
 
-Monitoramento de erros do [bFocus](https://bfocus.com.br) para Node.js ≥ 18. Os erros não tratados
+Monitoramento de erros do [bFocus](https://bfocus.com.br) para Node.js ≥ 20. Os erros não tratados
 do seu sistema chegam ao bFocus, são agrupados pela causa entre todos os clientes e viram demanda
 para a equipe — com a versão do sistema, o ambiente e o cliente afetado.
 

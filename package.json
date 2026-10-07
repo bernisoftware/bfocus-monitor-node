@@ -27,7 +27,7 @@
     "LICENSE"
   ],
   "engines": {
-    "node": ">=18"
+    "node": ">=20"
   },
   "scripts": {
     "clean": "node scripts/rm.mjs dist dist-test",
@@ -48,8 +48,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bernisoftware/bfocus.git",
-    "directory": "monitor/node"
+    "url": "git+https://github.com/bernisoftware/bfocus-monitor-node.git"
   },
   "homepage": "https://bfocus.com.br",
   "devDependencies": {
